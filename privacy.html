@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ember – Gizlilik / Privacy</title><style>:root{--bg:#fff;--ink:#111114;--muted:#6E6E78;--line:#E8E8EC;--surface:#F6F6F8;--accent:#FF5E3A}
+@media (prefers-color-scheme:dark){:root{--bg:#0E0E11;--ink:#F4F4F6;--muted:#8E8E98;--line:#2A2A31;--surface:#18181D;--accent:#FF6A48}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:40px 16px 80px}
+header{display:flex;align-items:center;gap:10px;margin-bottom:24px}header a{color:var(--ink);text-decoration:none;font:600 22px Georgia,serif}
+.dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#FFB547,#FF5E3A,#E8337A)}
+h1{font:600 30px/1.25 Georgia,serif;margin:32px 0 8px}h2{font:600 20px Georgia,serif;margin:28px 0 8px}
+p,li{color:var(--ink)}em{color:var(--muted);font-style:normal}a{color:var(--accent)}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--surface)}
+nav{display:flex;gap:16px;font-size:14px}nav a{color:var(--muted)}</style></head>
+<body><main><header><span class="dot"></span><a href="./">Ember</a></header>
+<nav><a href="privacy.html">Gizlilik · Privacy</a><a href="terms.html">Koşullar · Terms</a></nav>
+<h1>Ember Gizlilik Politikası</h1>
+<p><em>Son güncelleme: 15 Ekim 2026</em></p>
+<p>Ember, çocukların büyüklerine soru sorduğu ve büyüklerin sesli hikâyelerle cevap verdiği, <strong>yalnızca aileye özel</strong> bir uygulamadır. Hiçbir içerik herkese açık değildir, reklam yoktur ve verileriniz satılmaz.</p>
+<h2>1. Hangi verileri topluyoruz?</h2>
+<table><thead><tr><th>Veri</th><th>Ne için</th><th>Nerede saklanır</th></tr></thead><tbody><tr><td>E-posta adresi veya Apple kimliği</td><td>Giriş yapmak ve aile alanına bağlanmak</td><td>Supabase (Frankfurt, AB)</td></tr><tr><td>Soy ağacındaki kişilerin adı, yakınlık derecesi, doğum yılı ve yeri, isteğe bağlı fotoğrafı</td><td>Soy ağacını göstermek</td><td>Telefonunuz ve aile paylaşımı açıksa Supabase (AB)</td></tr><tr><td>Sorular ve ses kayıtları (hikâyeler)</td><td>Uygulamanın temel işlevi</td><td>Telefonunuz ve aile paylaşımı açıksa Supabase (AB)</td></tr><tr><td>Hikâyelerin yazılı hâli</td><td>Okuma, altyazı ve yapay zekâ özetleri</td><td>Telefonunuz ve Supabase (AB)</td></tr><tr><td>Yapay zekâ ile üretilen başlık, özet, takip soruları ve sahne görselleri</td><td>İsteğe bağlı yapay zekâ özellikleri</td><td>Supabase (AB)</td></tr></tbody></table>
+<p><strong>Çocukların hesabı yoktur.</strong> Çocuklar uygulamayı bir ebeveynin telefonunda, ebeveyn kontrolünde kullanır. Çocuklardan e-posta, konum veya iletişim bilgisi toplanmaz. Çocukların ses kaydı alınmaz; kayıtları yalnızca büyükler yapar.</p>
+<p>Uygulama <strong>konum, rehber, reklam kimliği veya takip verisi toplamaz</strong>. Üçüncü taraf analiz veya reklam aracı kullanılmaz.</p>
+<h2>2. Verileri kimlerle paylaşıyoruz?</h2>
+<p>Verileriniz yalnızca davet ettiğiniz aile üyeleriyle paylaşılır. Hizmeti sunabilmek için şu hizmet sağlayıcıları kullanıyoruz:</p>
+<ul>
+<li><strong>Supabase</strong> (veritabanı ve dosya depolama, sunucular Frankfurt / AB&#x27;de): Aile verilerinin saklanması.</li>
+<li><strong>Apple</strong> (konuşmayı yazıya dökme): Mümkün olduğunda ses kaydı tamamen telefonunuzda yazıya dökülür. Cihaz bunu desteklemiyorsa ses Apple&#x27;ın konuşma tanıma hizmetine gönderilebilir.</li>
+<li><strong>Anthropic (Claude)</strong> — yalnızca yapay zekâ desteği açıksa: Hikâyenin <strong>yazılı hâli</strong>, sorusu ve anlatanın adı ile doğum yılı/yeri, başlık, özet ve takip soruları üretmek için gönderilir. Ses kaydı gönderilmez.</li>
+<li><strong>OpenAI</strong> — yalnızca yapay zekâ desteği açıksa: Hikâyenin geçtiği <strong>yerin ve dönemin İngilizce tarifi</strong> sahne görseli çizmek için gönderilir. Ses kaydı, isimler ve fotoğraflar gönderilmez; görsellerde gerçek kişilerin yüzleri çizilmez.</li>
+<li><strong>E-posta servis sağlayıcısı</strong>: Giriş kodlarını göndermek için.</li>
+</ul>
+<p>Bu sağlayıcılar verilerinizi yalnızca Ember&#x27;e hizmet vermek için işler. Anthropic ve OpenAI, API üzerinden gönderilen verileri kendi modellerini eğitmek için kullanmaz.</p>
+<h2>3. Ebeveyn kontrolü ve yapay zekâ</h2>
+<ul>
+<li>Çocukların soruları, ayar açıksa önce ebeveyn onayından geçer.</li>
+<li>Yapay zekânın ürettiği hiçbir içerik, ebeveyn onaylamadan çocuklara gösterilmez.</li>
+<li>Yapay zekâ desteği <strong>Ayarlar → Yapay zekâ desteği</strong> bölümünden aile genelinde kapatılabilir.</li>
+</ul>
+<h2>4. Saklama süresi ve silme</h2>
+<ul>
+<li>Verileriniz, siz silene kadar saklanır.</li>
+<li>Bir hikâyeyi veya kişiyi uygulamadan silebilirsiniz; silme tüm aile cihazlarına yansır.</li>
+<li><strong>Hesabınızı silmek için:</strong> Ebeveynler: Ayarlar → Aile paylaşımı → <strong>Hesabı sil</strong>. Anlatıcılar (büyükler): ana ekrandaki <strong>⋯</strong> menüsü → <strong>Hesabımı sil</strong>; anlattıkları hikâyeler ailede kalır. Ailenin tek ebeveyniyseniz ailenin tüm verileri (soy ağacı, hikâyeler, ses kayıtları, fotoğraflar, görseller) kalıcı olarak silinir. Başka bir ebeveyn varsa aile onunla kalır.</li>
+<li>Aile paylaşımını hiç açmadıysanız verileriniz yalnızca telefonunuzdadır: <strong>Ayarlar → Tüm aile verilerini sil</strong> ile kaldırabilirsiniz.</li>
+</ul>
+<h2>5. Haklarınız (KVKK ve GDPR)</h2>
+<p>Verilerinize erişme, düzeltme, silme, taşınmasını isteme ve işlenmesine itiraz etme haklarına sahipsiniz. Talepleriniz için bize yazın: <strong><a href="mailto:miraygundogan@gmail.com">miraygundogan@gmail.com</a></strong></p>
+<h2>6. Güvenlik</h2>
+<p>Tüm bağlantılar şifrelidir. Her ailenin verisi, veritabanı düzeyindeki erişim kurallarıyla diğer ailelerden ayrılır. Ses kayıtları ve görseller özel (herkese kapalı) bir depoda tutulur.</p>
+<h2>7. Değişiklikler</h2>
+<p>Bu politikayı güncellersek, uygulama içinde ve bu sayfada duyururuz.</p>
+<hr>
+<h1>Ember Privacy Policy</h1>
+<p><em>Last updated: October 15, 2026</em></p>
+<p>Ember is a <strong>private family app</strong>: children ask their elders questions and elders answer with short voice stories. Nothing is ever public, there are no ads, and your data is never sold.</p>
+<h2>1. What we collect</h2>
+<table><thead><tr><th>Data</th><th>Why</th><th>Where it is stored</th></tr></thead><tbody><tr><td>Email address or Apple ID</td><td>Signing in and connecting to your family space</td><td>Supabase (Frankfurt, EU)</td></tr><tr><td>Names, family relation, birth year and place, optional photo of people in the tree</td><td>Showing the family tree</td><td>Your phone, and Supabase (EU) if family sharing is on</td></tr><tr><td>Questions and voice recordings (stories)</td><td>The core of the app</td><td>Your phone, and Supabase (EU) if family sharing is on</td></tr><tr><td>Written transcripts of stories</td><td>Reading, captions and AI summaries</td><td>Your phone and Supabase (EU)</td></tr><tr><td>AI-generated titles, summaries, follow-up questions and scene illustrations</td><td>Optional AI features</td><td>Supabase (EU)</td></tr></tbody></table>
+<p><strong>Children do not have accounts.</strong> They use Ember on a parent&#x27;s phone, under parental control. We collect no email, location or contact details from children, and children are never recorded — only elders record stories.</p>
+<p>Ember does <strong>not</strong> collect location, contacts, advertising identifiers or tracking data, and uses no third-party analytics or advertising tools.</p>
+<h2>2. Who we share data with</h2>
+<p>Your data is shared only with the family members you invite. To run the service we use these providers:</p>
+<ul>
+<li><strong>Supabase</strong> (database and file storage, servers in Frankfurt, EU): storing family data.</li>
+<li><strong>Apple</strong> (speech-to-text): whenever possible, recordings are transcribed entirely on your phone. If your device does not support this, audio may be sent to Apple&#x27;s speech recognition service.</li>
+<li><strong>Anthropic (Claude)</strong>, only if AI help is on: the story&#x27;s <strong>text transcript</strong>, its question and the storyteller&#x27;s name, birth year and place are sent to write a title, summary and follow-up questions. Audio is never sent.</li>
+<li><strong>OpenAI</strong>, only if AI help is on: an <strong>English description of the story&#x27;s place and era</strong> is sent to illustrate a scene. No audio, names or photos are sent, and illustrations never depict real people&#x27;s faces.</li>
+<li><strong>Email delivery provider</strong>: to send sign-in codes.</li>
+</ul>
+<p>These providers process your data only to provide Ember&#x27;s service. Anthropic and OpenAI do not use data sent through their APIs to train their models.</p>
+<h2>3. Parental control and AI</h2>
+<ul>
+<li>If the setting is on, children&#x27;s questions are approved by a parent first.</li>
+<li>Nothing produced by AI is shown to children until a parent approves it.</li>
+<li>AI help can be turned off for the whole family in <strong>Settings → AI help</strong>.</li>
+</ul>
+<h2>4. Retention and deletion</h2>
+<ul>
+<li>Your data is kept until you delete it.</li>
+<li>You can delete any story or person in the app; deletions reach every family device.</li>
+<li><strong>To delete your account:</strong> Parents: Settings → Family sharing → <strong>Delete account</strong>. Storytellers (elders): the <strong>⋯</strong> menu on the home screen → <strong>Delete my account</strong>; the stories they told stay with the family. If you are the family&#x27;s only parent, all of the family&#x27;s data (tree, stories, recordings, photos, illustrations) is permanently deleted. If another parent remains, the family stays with them.</li>
+<li>If you never turned on family sharing, your data exists only on your phone: remove it with <strong>Settings → Delete all family data</strong>.</li>
+</ul>
+<h2>5. Your rights (GDPR and KVKK)</h2>
+<p>You may access, correct, delete or export your data, and object to its processing. Contact us at <strong><a href="mailto:miraygundogan@gmail.com">miraygundogan@gmail.com</a></strong>.</p>
+<h2>6. Security</h2>
+<p>All connections are encrypted. Each family&#x27;s data is separated from every other family by database-level access rules. Recordings and illustrations are kept in private storage.</p>
+<h2>7. Changes</h2>
+<p>If we update this policy, we will announce it in the app and on this page.</p></main></body></html>
