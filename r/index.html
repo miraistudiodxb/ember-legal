@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<title>Ember · Sesli cevap</title>
+<style>
+:root{--bg:#fff;--ink:#111114;--muted:#6E6E78;--line:#E8E8EC;--surface:#F6F6F8;--accent:#FF5E3A;--glow:linear-gradient(135deg,#FFB547,#FF5E3A,#E8337A)}
+@media (prefers-color-scheme:dark){:root{--bg:#0E0E11;--ink:#F4F4F6;--muted:#8E8E98;--line:#2A2A31;--surface:#18181D;--accent:#FF6A48}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:20px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:560px;margin:0 auto;padding:28px 16px 60px;display:flex;flex-direction:column;gap:22px}
+header{display:flex;align-items:center;gap:10px;font:600 22px Georgia,serif}.dot{width:14px;height:14px;border-radius:50%;background:var(--glow)}
+.who{color:var(--muted);font-size:18px}.q{font:600 30px/1.3 Georgia,serif;margin:0}
+img{width:100%;border-radius:20px;display:block}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}
+.safe{font-size:16px;color:var(--muted)}
+label.consent{display:flex;gap:12px;align-items:flex-start;font-size:18px;cursor:pointer}
+label.consent input{width:28px;height:28px;flex:none;margin-top:2px;accent-color:var(--accent)}
+button{font:600 22px -apple-system,BlinkMacSystemFont,sans-serif;border:0;border-radius:999px;padding:18px 24px;cursor:pointer;width:100%}
+.primary{background:var(--glow);color:#fff}.secondary{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+button:disabled{opacity:.45;cursor:default}
+.rec{width:180px;height:180px;border-radius:50%;margin:0 auto;display:grid;place-items:center;background:var(--glow);color:#fff;font-size:22px;padding:0;box-shadow:0 12px 40px rgba(255,94,58,.35)}
+.rec.on{animation:pulse 1.4s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.06)}}
+.time{text-align:center;font:600 44px ui-rounded,-apple-system,sans-serif;font-variant-numeric:tabular-nums}
+.center{text-align:center}.hidden{display:none!important}.err{color:#C0392B}
+.row{display:flex;gap:12px}.row button{flex:1}
+</style></head>
+<body><main>
+<header><span class="dot"></span>Ember</header>
+
+<section id="loading" class="center who" data-t="loading">Yükleniyor…</section>
+<section id="gone" class="card hidden"><p class="q" data-t="goneTitle">Bu bağlantı artık geçerli değil.</p><p data-t="goneText">Soru cevaplanmış ya da bağlantının süresi dolmuş olabilir. Ailenden yeni bir bağlantı isteyebilirsin.</p></section>
+
+<section id="ask" class="hidden" style="display:flex;flex-direction:column;gap:22px">
+  <div class="who" id="who"></div>
+  <p class="q" id="question"></p>
+  <img id="photo" class="hidden" alt="">
+  <div class="card safe" data-t="safe">Bu sayfa senden asla şifre, kod, banka bilgisi ya da para istemez. Sadece sesini kaydeder ve ailene gönderir.</div>
+
+  <div id="consentBox" class="card">
+    <label class="consent"><input type="checkbox" id="consent"><span data-t="consent">Sesli cevabımın kaydedilmesini ve Ember’de yalnızca ailemle paylaşılmasını kabul ediyorum.</span></label>
+    <p class="safe"><a href="../privacy.html" target="_blank" data-t="privacy">Aydınlatma metnini oku</a></p>
+  </div>
+
+  <div id="recorder" class="center" style="display:flex;flex-direction:column;gap:16px">
+    <button id="recBtn" class="rec" disabled data-t="start">Başla</button>
+    <div class="time" id="time">0:00</div>
+    <div class="who" id="hint" data-t="hint">Butona dokun, anlat, bitince tekrar dokun. En fazla 10 dakika.</div>
+  </div>
+
+  <div id="review" class="hidden" style="display:flex;flex-direction:column;gap:14px">
+    <audio id="player" controls style="width:100%"></audio>
+    <button id="send" class="primary" data-t="send">Aileme gönder</button>
+    <button id="again" class="secondary" data-t="again">Baştan kaydet</button>
+  </div>
+  <p id="error" class="err hidden"></p>
+</section>
+
+<section id="done" class="card center hidden"><p class="q" data-t="doneTitle">Teşekkürler! 🧡</p><p data-t="doneText">Hikâyen ailene ulaştı. Bu sayfayı kapatabilirsin.</p></section>
+</main>
+<script>
+(() => {
+  const API = "https://lignvirmynmtyskktqjg.supabase.co/functions/v1/record-link";
+  const KEY = "sb_publishable_zEDBpM0DJcwi62syR5xnZA_jaqj37Aa";
+  const MAX_SECONDS = 600, RATE = 16000;
+
+  const en = (navigator.language || "").toLowerCase().startsWith("en");
+  const T = en ? {
+    loading: "Loading…", goneTitle: "This link no longer works.",
+    goneText: "The question may already be answered, or the link has expired. You can ask your family for a new one.",
+    safe: "This page will never ask you for a password, a code, bank details or money. It only records your voice and sends it to your family.",
+    consent: "I agree that my voice answer is recorded and shared only with my family on Ember.",
+    privacy: "Read the privacy notice", start: "Start", stop: "Finish",
+    hint: "Tap the button, tell your story, tap again when you're done. Up to 10 minutes.",
+    send: "Send to my family", again: "Record again", sending: "Sending…",
+    doneTitle: "Thank you! 🧡", doneText: "Your story reached your family. You can close this page.",
+    asks: (a, n) => a ? `${a} asks ${n || "you"}:` : "Your family asks:",
+    micError: "The microphone couldn't be opened. Please allow microphone access and try again.",
+    sendError: "It couldn't be sent. Check your connection and try again."
+  } : {
+    start: "Başla", stop: "Bitir", sending: "Gönderiliyor…",
+    asks: (a, n) => a ? `${a} soruyor:` : "Ailen soruyor:",
+    micError: "Mikrofon açılamadı. Lütfen mikrofon izni ver ve tekrar dene.",
+    sendError: "Gönderilemedi. İnternet bağlantını kontrol edip tekrar dene."
+  };
+  if (en) {
+    document.documentElement.lang = "en";
+    document.querySelectorAll("[data-t]").forEach(el => { if (T[el.dataset.t]) el.textContent = T[el.dataset.t]; });
+  }
+  const $ = id => document.getElementById(id);
+  const show = (id, on = true) => $(id).classList.toggle("hidden", !on);
+
+  const token = new URLSearchParams(location.search).get("t") || "";
+  // Keep the token out of history and anything shared from this tab.
+  history.replaceState(null, "", location.pathname);
+
+  async function load() {
+    if (!/^[A-Za-z0-9_-]{24,64}$/.test(token)) { show("loading", false); show("gone"); return; }
+    try {
+      const r = await fetch(`${API}?t=${encodeURIComponent(token)}`, { headers: { apikey: KEY } });
+      if (!r.ok) throw 0;
+      const q = await r.json();
+      $("who").textContent = T.asks(q.asker_name, q.narrator_name);
+      $("question").textContent = q.question;
+      if (q.photo_url) { $("photo").src = q.photo_url; show("photo"); }
+      show("loading", false); $("ask").classList.remove("hidden");
+    } catch { show("loading", false); show("gone"); }
+  }
+
+  $("consent").addEventListener("change", e => { $("recBtn").disabled = !e.target.checked; });
+
+  let ctx, stream, source, node, chunks = [], seconds = 0, ticker, wav, recording = false;
+
+  async function start() {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    } catch { error(T.micError); return; }
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    source = ctx.createMediaStreamSource(stream);
+    node = ctx.createScriptProcessor(4096, 1, 1);
+    chunks = [];
+    node.onaudioprocess = e => { if (recording) chunks.push(new Float32Array(e.inputBuffer.getChannelData(0))); };
+    source.connect(node); node.connect(ctx.destination);
+    recording = true; seconds = 0; tick();
+    ticker = setInterval(() => { seconds++; tick(); if (seconds >= MAX_SECONDS) stop(); }, 1000);
+    $("recBtn").textContent = T.stop; $("recBtn").classList.add("on");
+    show("consentBox", false); show("error", false);
+  }
+
+  function stop() {
+    recording = false; clearInterval(ticker);
+    node.disconnect(); source.disconnect(); stream.getTracks().forEach(t => t.stop());
+    wav = encodeWav(chunks, ctx.sampleRate);
+    ctx.close();
+    $("player").src = URL.createObjectURL(wav);
+    $("recBtn").textContent = T.start; $("recBtn").classList.remove("on");
+    show("recorder", false); show("review");
+  }
+
+  function tick() { $("time").textContent = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`; }
+
+  /// 16 kHz mono 16-bit PCM keeps ten minutes under 20 MB.
+  function encodeWav(parts, inRate) {
+    const length = parts.reduce((n, p) => n + p.length, 0);
+    const input = new Float32Array(length); let o = 0;
+    for (const p of parts) { input.set(p, o); o += p.length; }
+    const ratio = inRate / RATE, outLength = Math.floor(length / ratio);
+    const view = new DataView(new ArrayBuffer(44 + outLength * 2));
+    const str = (at, s) => { for (let i = 0; i < s.length; i++) view.setUint8(at + i, s.charCodeAt(i)); };
+    str(0, "RIFF"); view.setUint32(4, 36 + outLength * 2, true); str(8, "WAVE");
+    str(12, "fmt "); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+    view.setUint32(24, RATE, true); view.setUint32(28, RATE * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+    str(36, "data"); view.setUint32(40, outLength * 2, true);
+    for (let i = 0; i < outLength; i++) {
+      // Average the samples that fall into each output sample (simple low-pass while downsampling).
+      const from = Math.floor(i * ratio), to = Math.min(length, Math.floor((i + 1) * ratio));
+      let sum = 0; for (let j = from; j < to; j++) sum += input[j];
+      const s = Math.max(-1, Math.min(1, sum / Math.max(1, to - from)));
+      view.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+    }
+    return new Blob([view], { type: "audio/wav" });
+  }
+
+  async function send() {
+    $("send").disabled = true; $("again").disabled = true; $("send").textContent = T.sending; show("error", false);
+    try {
+      const r = await fetch(`${API}?t=${encodeURIComponent(token)}&d=${seconds}`, {
+        method: "POST", headers: { apikey: KEY, "Content-Type": "audio/wav" }, body: wav
+      });
+      if (r.status === 410) { $("ask").classList.add("hidden"); show("gone"); return; }
+      if (!r.ok) throw 0;
+      $("ask").classList.add("hidden"); show("done");
+    } catch {
+      error(T.sendError);
+      $("send").disabled = false; $("again").disabled = false; $("send").textContent = T.send || "Aileme gönder";
+    }
+  }
+
+  function error(text) { $("error").textContent = text; show("error"); }
+
+  $("recBtn").addEventListener("click", () => recording ? stop() : start());
+  $("send").addEventListener("click", send);
+  $("again").addEventListener("click", () => { wav = null; seconds = 0; tick(); show("review", false); show("recorder"); });
+  load();
+})();
+</script>
+</body></html>
